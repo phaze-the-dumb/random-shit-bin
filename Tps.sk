@@ -1,0 +1,70 @@
+#options
+options:
+	version: 3.0
+	owner:  skPrison
+	helper: iRev
+	primary: <##8b9dc3>
+	secondary: <##f4bbcc>
+	text: &f
+	textprimary: &7
+	symbol: ▶
+#deleting the uptime
+on unload:
+    delete {uptimeseconds}
+    delete {uptimeweeks} 
+    delete {uptimedays}
+    delete {uptimeminutes}
+on load: 
+    set {uptimeseconds} to 0
+    set {uptimeweeks} to 0
+    set {uptimedays} to 0
+    set {uptimeminutes} to 0
+
+#Time    
+function Time():  
+    add 1 to {uptimeseconds}
+    if {uptimeseconds} >= 60:
+        set {uptimeseconds} to 0
+        add 1 to {uptimeminutes}
+    if {uptimeminutes} >= 60:
+        set {uptimeminutes} to 0
+        add 1 to {uptimehours}
+    if {uptimehours} >= 24:
+        set {uptimehours} to 0
+        add 1 to {uptimedays}    
+    if {uptimedays} >= 7:
+        set {uptimedays} to 0
+        add 1 to {uptimeweeks}
+every 1 second:
+	Time()
+#Command/Function
+command /tps:
+	trigger:
+		TPS(player)
+function Check():
+	if first element of tps > 19.01:
+		set {tpscheck} to "&aPERFECT"
+	if first element of tps is between 17.01 and 19:
+		set {tpscheck} to "&eGOOD"
+	if first element of tps < 17:
+		set {tpscheck} to "&CBAD"	
+
+		
+function TPS(p: player):
+	Check()
+	message "" to {_p} 
+	message "{@primary}&lSERVER TPS" to {_p}
+	message "{@textprimary}&oVersion: {@textprimary}{@version}" to {_p}
+	message "{@textprimary}&oCreator: {@textprimary}{@owner}" to {_p} 
+	message "{@textprimary}&oHelper: {@textprimary}{@helper}" to {_p}
+	message "" to {_p} 
+	message "{@secondary}{@symbol} {@textprimary}TPS: &f%tps%" to {_p}
+	message "{@secondary}{@symbol} {@textprimary}Server Stability: %{tpscheck}%" to {_p} 
+	message "" to {_p}
+	message "{@primary}Ram information" to {_p}
+	message "{@secondary}{@symbol} {@textprimary}Ram Usage: {@text}%free ram%MB/%max ram%MB" to {_p}
+	message "{@secondary}{@symbol} {@textprimary}Ram Free: {@text}%max ram - free ram%MB" to {_p}
+	message "{@secondary}{@symbol} {@textprimary}Ram Usage Percentage: {@text}%free ram/max ram*100%%%" to {_p}
+	message "{@secondary}{@symbol} {@textprimary}Server uptime: {@text} %{uptimeweeks}%W, %{uptimedays}%D, %{uptimeminutes}%M, %{uptimeseconds}%S" to {_p}
+	message "" to {_p}
+	message "{@textprimary}&n&ouse /serverinformation for advanced server information" to {_p}
